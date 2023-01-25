@@ -15,9 +15,7 @@ interface EmailOptions {
 export class EmailService {
   private transporter: Mail;
 
-  constructor(
-    @Inject(emailConfig.KEY) private config: ConfigType<typeof emailConfig>,
-  ) {
+  constructor(@Inject(emailConfig.KEY) private config: ConfigType<typeof emailConfig>) {
     this.transporter = nodemailer.createTransport({
       service: config.service,
       auth: {
@@ -27,10 +25,7 @@ export class EmailService {
     });
   }
 
-  async sendMemberJoinVerification(
-    emailAddress: string,
-    signupVerifyToken: string,
-  ) {
+  async sendMemberJoinVerification(emailAddress: string, signupVerifyToken: string) {
     const baseUrl = this.config.baseUrl;
 
     const url = `${baseUrl}/users/email-verify?signupVerifyToken=${signupVerifyToken}`;
