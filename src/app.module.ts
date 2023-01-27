@@ -11,6 +11,7 @@ import authConfig from 'src/config/authConfig';
 import { AppService } from './app.service';
 import { WinstonModule, utilities as nestjsWinstonModuleUtilities } from 'nest-winston';
 import { LoggerModule } from './logger/logger.module';
+import { ExceptionModule } from './exception/exception.module';
 import * as winston from 'winston';
 
 @Module({
@@ -47,6 +48,7 @@ import * as winston from 'winston';
     EmailModule,
     AuthModule,
     LoggerModule,
+    ExceptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
