@@ -8,6 +8,10 @@ import { validationSchema } from './config/validationSchema';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import authConfig from 'src/config/authConfig';
+import { AppService } from './app.service';
+import { WinstonModule, utilities as nestjsWinstonModuleUtilities } from 'nest-winston';
+import { LoggerModule } from './logger/logger.module';
+import * as winston from 'winston';
 
 @Module({
   imports: [
@@ -27,11 +31,24 @@ import authConfig from 'src/config/authConfig';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
     }),
+    WinstonModule.forRoot({
+      transports: [
+        new winston.transports.Console({
+          level: process.env.NODE_ENV === 'production' ? 'info' : 'silly',
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            nestjsWinstonModuleUtilities.format.nestLike('MyApp', { prettyPrint: true }),
+          ),
+        }),
+      ],
+    }),
+    LoggerModule,
     UsersModule,
     EmailModule,
     AuthModule,
+    LoggerModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [AppService],
 })
 export class AppModule {}
