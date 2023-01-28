@@ -10,7 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import authConfig from 'src/config/authConfig';
 import { AppService } from './app.service';
 import { WinstonModule, utilities as nestjsWinstonModuleUtilities } from 'nest-winston';
-import { LoggerModule } from './logger/logger.module';
+import { LoggingModule } from './logging/logging.module';
 import { ExceptionModule } from './exception/exception.module';
 import * as winston from 'winston';
 
@@ -43,11 +43,10 @@ import * as winston from 'winston';
         }),
       ],
     }),
-    LoggerModule,
+    LoggingModule,
     UsersModule,
     EmailModule,
     AuthModule,
-    LoggerModule,
     ExceptionModule,
   ],
   controllers: [AppController],
