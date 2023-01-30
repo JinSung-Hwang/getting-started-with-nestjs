@@ -13,6 +13,7 @@ import { WinstonModule, utilities as nestjsWinstonModuleUtilities } from 'nest-w
 import { LoggingModule } from './logging/logging.module';
 import { ExceptionModule } from './exception/exception.module';
 import { BatchModule } from './batch/batch.module';
+import { HealthCheckModule } from './health-check/health-check.module';
 import * as winston from 'winston';
 
 @Module({
@@ -50,6 +51,7 @@ import * as winston from 'winston';
     AuthModule,
     ExceptionModule,
     BatchModule,
+    HealthCheckModule,
   ],
   controllers: [AppController],
   providers: [AppService],
