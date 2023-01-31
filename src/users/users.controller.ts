@@ -20,6 +20,9 @@ import { UserInfo } from './dto/user-info.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { Logger as WinstonLogger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from './command/create-user.command';
+import { GetUserInfoQuery } from './query/get-user-info.query';
 
 @Controller('users')
 export class UsersController {
@@ -27,14 +30,20 @@ export class UsersController {
     private readonly usersService: UsersService,
     // @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: WinstonLogger,
     @Inject(Logger) private readonly logger: LoggerService,
+    private commandBus: CommandBus,
+    private queryBus: QueryBus,
   ) {}
 
+  // note: 유저 가입 실행 흐름: userController -> create-user.handler -> user-event.handler
+  // note: 실행 흐름 설명: 1. userController에서 create-user.command 가 발생하여 create-user.handler에서 command받아서 실행하고
+  // note:                 2. create-user.handler 에서 user-created-event가 발생하여 user-events.handler가 event를 받아서 실행됨
   @Post()
   async create(@Body() dto: CreateUserDto): Promise<void> {
     this.printLoggerServiceLog(dto);
 
     const { name, email, password } = dto;
-    await this.usersService.createUser(name, email, password);
+    const command = new CreateUserCommand(name, email, password);
+    return this.commandBus.execute(command);
   }
 
   private printLoggerServiceLog(dto) {
@@ -63,10 +72,13 @@ export class UsersController {
     return await this.usersService.login(email, password);
   }
 
+  // note: 유저 정보 실행 흐름: userController -> get-user-info-handler
+  // note: 실행 흐름 설명: userController에서 get-user-info.query 가 발생하여 get-user-info-handler가 query를 수집하여 실행됨
   @UseGuards(AuthGuard)
   @Get('/:id')
   async getUserInfo(@Param('id') userId: string): Promise<UserInfo> {
-    return await this.usersService.getUserInfo(userId);
+    const getUserInfoQuery = new GetUserInfoQuery(userId);
+    return this.queryBus.execute(getUserInfoQuery);
   }
 
   @Delete('/:id')
