@@ -1,10 +1,10 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../entities/user.entity';
+import { UserEntity } from '../../infra/db/entities/user.entity';
 import { Repository } from 'typeorm';
 import { GetUserInfoQuery } from './get-user-info.query';
 import { NotFoundException } from '@nestjs/common';
-import { UserInfo } from '../dto/user-info.dto';
+import { UserInfo } from '../../interface/dto/user-info.dto';
 
 @QueryHandler(GetUserInfoQuery)
 export class GetUserInfoQueryHandler implements IQueryHandler<GetUserInfoQuery> {

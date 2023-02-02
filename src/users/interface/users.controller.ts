@@ -12,17 +12,17 @@ import {
   LoggerService,
   Logger,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService } from '../users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { VerifyEmailDto } from './dto/verify-email-dto';
 import { UserLoginDto } from './dto/user-login-dto';
 import { UserInfo } from './dto/user-info.dto';
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from '../../auth/auth.guard';
 import { Logger as WinstonLogger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateUserCommand } from './command/create-user.command';
-import { GetUserInfoQuery } from './query/get-user-info.query';
+import { CreateUserCommand } from '../application/command/create-user.command';
+import { GetUserInfoQuery } from '../application/query/get-user-info.query';
 
 @Controller('users')
 export class UsersController {
@@ -34,7 +34,7 @@ export class UsersController {
     private queryBus: QueryBus,
   ) {}
 
-  // note: 유저 가입 실행 흐름: userController -> create-user.handler -> user-event.handler
+  // note: 유저 가입 실행 흐름: userController -> create-user.handler
   // note: 실행 흐름 설명: 1. userController에서 create-user.command 가 발생하여 create-user.handler에서 command받아서 실행하고
   // note:                 2. create-user.handler 에서 user-created-event가 발생하여 user-events.handler가 event를 받아서 실행됨
   @Post()

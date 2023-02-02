@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
-import { NotIn } from '../../utils/decorator/not-in';
+import { NotIn } from '../../../utils/decorator/not-in';
 
 export class CreateUserDto {
   @Transform((params) => params.value.trim())
